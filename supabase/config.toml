@@ -1,0 +1,23 @@
+project_id = "xktdzfcwydiatzgbrozr"
+
+[auth]
+enabled = true
+image_upload_types = ["jpg", "png", "gif", "jpeg"]
+file_upload_types = ["jpg", "png", "gif", "jpeg"]
+
+[db]
+pooler_enabled = false
+
+[realtime]
+enabled = false
+
+[storage]
+enabled = true
+image_transformation = true
+upload_file_size_limit = 50
+
+[edge_runtime]
+enabled = true
+
+[functions.send-payment-reminder]
+verify_jwt = false
