@@ -1,73 +1,86 @@
-# Welcome to your Lovable project
+SplitEase – Smart Group Expense Tracker
 
-## Project info
+SplitEase is a smart group expense tracker that makes it easy to manage shared expenses with friends, family, or roommates. It automatically calculates each person’s share, provides balance summaries, and sends reminders to settle payments.
 
-**URL**: https://lovable.dev/projects/6fe5f20b-155e-40b7-b1e5-551c069adca9
+🚀 Features
 
-## How can I edit this code?
+💰 Group Expense Management – Create groups and add shared expenses.
 
-There are several ways of editing your application.
+🔄 Auto-Split Logic – Automatically split bills among group members.
 
-**Use Lovable**
+📊 Balance Summaries – View who owes whom and how much.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/6fe5f20b-155e-40b7-b1e5-551c069adca9) and start prompting.
+✉️ Email Reminders – Notify members to settle their dues.
 
-Changes made via Lovable will be committed automatically to this repo.
+📱 Seamless Payment Redirects – Quick links to payment apps.
 
-**Use your preferred IDE**
+🔒 Secure Data Handling – User authentication & data security.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+🛠 Tech Stack
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+Frontend: React.js (Vite, ShadCN UI, TailwindCSS)
 
-Follow these steps:
+Backend: Node.js + Express / Flask (choose depending on final build)
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+Database: MongoDB / PostgreSQL
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+Authentication: Supabase / Firebase / JWT
 
-# Step 3: Install the necessary dependencies.
-npm i
+Deployment: Vercel / Netlify (frontend), Render / Heroku / AWS (backend)
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+📂 Project Structure
+SplitEase/
+│── client/          # React frontend (Vite)
+│── server/          # Backend API
+│── database/        # DB schema & migrations
+│── docs/            # Documentation & design files
+│── README.md        # Project documentation
+
+⚡ Getting Started
+1. Clone the Repository
+git clone https://github.com/your-username/splitease.git
+cd splitease
+
+2. Setup Frontend
+cd client
+npm install
 npm run dev
-```
 
-**Edit a file directly in GitHub**
+3. Setup Backend
+cd server
+npm install
+npm start
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+4. Environment Variables
 
-**Use GitHub Codespaces**
+Create a .env file in both client and server with values like:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+DATABASE_URL=your_database_url
+SUPABASE_KEY=your_supabase_key
+EMAIL_SERVICE_API_KEY=your_email_api_key
 
-## What technologies are used for this project?
+5. Run Application
 
-This project is built with:
+Start frontend and backend together:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+npm run dev
 
-## How can I deploy this project?
+📸 Screenshots
 
-Simply open [Lovable](https://lovable.dev/projects/6fe5f20b-155e-40b7-b1e5-551c069adca9) and click on Share -> Publish.
+Soon...........
 
-## Can I connect a custom domain to my Lovable project?
+🤝 Contribution
 
-Yes, you can!
+Contributions are welcome! To contribute:
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Fork this repository
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Create a new branch (feature/awesome-feature)
+
+Commit your changes
+
+Push the branch and create a Pull Request
+
+📜 License
+
+This project is licensed under the MIT License.
