@@ -27,7 +27,7 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
     const {
@@ -46,23 +46,23 @@ const handler = async (req: Request): Promise<Response> => {
 
     const responses: any = {};
 
-    // ✅ Create SMTP transporter (custom domain)
+    // SMTP transporter
     const transporter = nodemailer.createTransport({
       host: "mail.cantan.in", // SMTP server
       port: 465, // SSL port
       secure: true, // true = SSL/TLS
       auth: {
         user: "support@cantan.in",
-        pass: "12345@Ankush", // Apna SMTP password env me rakho
+        pass: "12345@Ankush",
       },
     });
 
-    // ✅ Send Email Reminder
+    // Email Reminder
     if (reminderType === "email" || reminderType === "both") {
       try {
         const mailOptions = {
-          from: '"SplitEase" <support@cantan.in>', // sender
-          to: memberEmail, // receiver
+          from: '"SplitEase" <support@cantan.in>',
+          to: memberEmail,
           subject: Payment Reminder: ${expenseTitle},
           html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -103,58 +103,57 @@ const handler = async (req: Request): Promise<Response> => {
 
         const emailResponse = await transporter.sendMail(mailOptions);
         responses.email = emailResponse;
-        console.log("Email sent successfully:", emailResponse);
+        console.log("✅ Email sent successfully:", emailResponse);
       } catch (error) {
-        console.error("Error sending email:", error);
+        console.error("❌ Error sending email:", error);
+
+        // Optional: Notify admin or log to supabase table
+        try {
+          await supabase.from("email_failures").insert({
+            expense_id: expenseId,
+            member_email: memberEmail,
+            error_message: error.message,
+            created_at: new Date().toISOString(),
+          });
+          console.log("Notification logged to supabase for failed email.");
+        } catch (logError) {
+          console.error("Failed to log email error to supabase:", logError);
+        }
+
         responses.emailError = error.message;
       }
     }
 
-    // ✅ WhatsApp Reminder (still placeholder)
+    // WhatsApp Reminder Placeholder
     if ((reminderType === "whatsapp" || reminderType === "both") && whatsappNumber) {
-      try {
-        const whatsappMessage =
-          🔔 *Payment Reminder*\n\nHi ${memberName},\n\nYou have an outstanding payment:\n\n💰 *Amount:* $${amount.toFixed(2)}\n📋 *Expense:* ${expenseTitle}\n👥 *Group:* ${groupName}\n\nPlease mark your payment as completed once settled.\n\nThank you! 🙏;
+      const whatsappMessage =
+        🔔 *Payment Reminder*\n\nHi ${memberName},\n\nYou have an outstanding payment:\n\n💰 *Amount:* $${amount.toFixed(2)}\n📋 *Expense:* ${expenseTitle}\n👥 *Group:* ${groupName}\n\nPlease mark your payment as completed once settled.\n\nThank you! 🙏;
 
-        responses.whatsapp = {
-          status: "pending",
-          message: "WhatsApp integration requires API setup",
-          phoneNumber: whatsappNumber,
-          messageContent: whatsappMessage,
-        };
-
-        console.log("WhatsApp reminder prepared for:", whatsappNumber);
-      } catch (error) {
-        console.error("Error preparing WhatsApp reminder:", error);
-        responses.whatsappError = error.message;
-      }
+      responses.whatsapp = {
+        status: "pending",
+        message: "WhatsApp integration requires API setup",
+        phoneNumber: whatsappNumber,
+        messageContent: whatsappMessage,
+      };
     }
 
     return new Response(
       JSON.stringify({
         success: true,
         responses,
-        message: "Reminder(s) sent successfully",
+        message: "Reminder(s) processed",
       }),
       {
         status: 200,
-        headers: {
-          "Content-Type": "application/json",
-          ...corsHeaders,
-        },
-      },
-    );
-  } catch (error: any) {
-    console.error("Error in send-payment-reminder function:", error);
-    return new Response(
-      JSON.stringify({
-        error: error.message,
-        success: false,
-      }),
-      {
-        status: 500,
         headers: { "Content-Type": "application/json", ...corsHeaders },
-      },
+      }
+    );
+
+  } catch (error: any) {
+    console.error("❌ Error in handler:", error);
+    return new Response(
+      JSON.stringify({ error: error.message, success: false }),
+      { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
     );
   }
 };
