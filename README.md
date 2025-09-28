@@ -1,86 +1,53 @@
-SplitEase – Smart Group Expense Tracker
+# SplitEase - Expense Tracking App
 
-SplitEase is a smart group expense tracker that makes it easy to manage shared expenses with friends, family, or roommates. It automatically calculates each person’s share, provides balance summaries, and sends reminders to settle payments.
+A comprehensive expense tracking application built with React, TypeScript, Tailwind CSS, and Supabase backend.
 
-🚀 Features
+## ✨ Features
 
-💰 Group Expense Management – Create groups and add shared expenses.
+### 🔐 Complete Authentication System
+- **Email/Password Authentication**: Secure user registration and login
+- **Password Reset**: Users receive email with secure reset link (no redirect to login page)
+- **Protected Routes**: Automatic authentication checks and redirects
+- **User Profiles**: Automatic profile creation with user metadata
 
-🔄 Auto-Split Logic – Automatically split bills among group members.
+### 💰 Smart Expense Management
+- **Group Creation**: Create expense groups for families, trips, roommates
+- **Advanced Expense Tracking**: Track who paid what amounts upfront
+- **Intelligent Bill Splitting**: Split remaining amounts equally or custom amounts
+- **Payment History**: Complete payment tracking and history
+- **Real-time Updates**: Live updates when expenses or payments change
 
-📊 Balance Summaries – View who owes whom and how much.
+### 📧 Email Notification System
+- **Payment Reminders**: Send email reminders with outstanding amounts
+- **Payment Links**: Include payment links in reminder emails
+- **Custom Templates**: Professional email templates with expense details
+- **Bulk Notifications**: Send reminders to multiple members
 
-✉️ Email Reminders – Notify members to settle their dues.
+### 👥 Flexible Membership
+- **Registered Users**: Full features for signed-up users
+- **Guest Members**: Add members by name/email without registration
+- **Member Management**: Add/remove members, track participation
 
-📱 Seamless Payment Redirects – Quick links to payment apps.
+## 🛠 Tech Stack
 
-🔒 Secure Data Handling – User authentication & data security.
+- **Frontend**: React 18, TypeScript, Vite
+- **Styling**: Tailwind CSS with custom design system
+- **UI Components**: Radix UI primitives with shadcn/ui
+- **Backend**: Supabase (PostgreSQL, Authentication, Edge Functions)
+- **Email Service**: Resend API for transactional emails
+- **Real-time**: Supabase real-time subscriptions
+- **State Management**: React Context API
+- **Routing**: React Router DOM
 
-🛠 Tech Stack
+## 🚀 Quick Start
 
-Frontend: React.js (Vite, ShadCN UI, TailwindCSS)
+### Prerequisites
+- Node.js 18+ and npm
+- Supabase account (free tier available)
+- Resend account for emails (free tier available)
 
-Backend: Node.js + Express / Flask (choose depending on final build)
-
-Database: MongoDB / PostgreSQL
-
-Authentication: Supabase / Firebase / JWT
-
-Deployment: Vercel / Netlify (frontend), Render / Heroku / AWS (backend)
-
-📂 Project Structure
-SplitEase/
-│── client/          # React frontend (Vite)
-│── server/          # Backend API
-│── database/        # DB schema & migrations
-│── docs/            # Documentation & design files
-│── README.md        # Project documentation
-
-⚡ Getting Started
-1. Clone the Repository
-git clone https://github.com/your-username/splitease.git
+### 1. Clone and Install
+```bash
+git clone https://github.com/your-repo/splitease.git
 cd splitease
-
-2. Setup Frontend
-cd client
 npm install
-npm run dev
-
-3. Setup Backend
-cd server
-npm install
-npm start
-
-4. Environment Variables
-
-Create a .env file in both client and server with values like:
-
-DATABASE_URL=your_database_url
-SUPABASE_KEY=your_supabase_key
-EMAIL_SERVICE_API_KEY=your_email_api_key
-
-5. Run Application
-
-Start frontend and backend together:
-
-npm run dev
-
-📸 Screenshots
-
-Soon...........
-
-🤝 Contribution
-
-Contributions are welcome! To contribute:
-
-Fork this repository
-
-Create a new branch (feature/awesome-feature)
-
-Commit your changes
-
-Push the branch and create a Pull Request
-
-📜 License
-
-This project is licensed under the MIT License.
