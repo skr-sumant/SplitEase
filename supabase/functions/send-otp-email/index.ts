@@ -33,24 +33,33 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     await client.send({
-      from: Deno.env.get("SMTP_EMAIL") || "support@cantan.in",
-      to: email,
-      subject: "Password Reset OTP - SplitEase",
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h1 style="color: #333;">Password Reset Request</h1>
-          <p>You requested to reset your password for SplitEase. Use the OTP below to proceed:</p>
-          
-          <div style="background-color: #f5f5f5; padding: 20px; text-align: center; margin: 20px 0; border-radius: 8px;">
-            <h2 style="color: #2563eb; font-size: 32px; margin: 0; letter-spacing: 4px;">${otp}</h2>
-          </div>
-          
-          <p style="color: #666;">This OTP is valid for 10 minutes. If you didn't request this password reset, please ignore this email.</p>
-          
-          <p>Best regards,<br>The SplitEase Team</p>
-        </div>
-      `,
-    });
+  from: Deno.env.get("SMTP_EMAIL") || "support@cantan.in",
+  to: email,
+  subject: "Reset Your SplitEase Password",
+  html: `
+    <div style="font-family: 'Helvetica', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 10px;">
+      <h1 style="color: #1e293b; font-size: 24px; margin-bottom: 10px;">Password Reset Request</h1>
+      <p style="color: #475569; font-size: 16px; line-height: 1.5;">
+        You requested to reset your SplitEase password. Use the OTP below to continue:
+      </p>
+
+      <div style="background-color: #f0f4ff; padding: 25px; text-align: center; margin: 20px 0; border-radius: 12px; border: 1px solid #c7d2fe;">
+        <h2 style="color: #3b82f6; font-size: 36px; margin: 0; letter-spacing: 6px;">${otp}</h2>
+      </div>
+
+      <p style="color: #64748b; font-size: 14px;">
+        This OTP is valid for 10 minutes. If you did not request a password reset, please ignore this email.
+      </p>
+
+      <p style="color: #1e293b; font-size: 16px; margin-top: 30px;">
+        Best regards,<br>
+        <strong>The SplitEase Team</strong>
+      </p>
+    </div>
+  `,
+  encoding: "base64",
+});
+
 
     await client.close();
 

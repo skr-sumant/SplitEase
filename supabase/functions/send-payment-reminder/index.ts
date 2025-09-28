@@ -76,7 +76,7 @@ const handler = async (req: Request): Promise<Response> => {
               <div style="background-color: #f5f5f5; padding: 20px; margin: 20px 0; border-radius: 8px;">
                 <h3 style="margin: 0 0 10px 0; color: #333;">Payment Details:</h3>
                 <p style="margin: 5px 0;"><strong>Expense:</strong> ${expenseTitle}</p>
-                <p style="margin: 5px 0;"><strong>Amount Due:</strong> $${amount.toFixed(2)}</p>
+                <p style="margin: 5px 0;"><strong>Amount Due:</strong> ₹${amount.toFixed(2)}</p>
                 <p style="margin: 5px 0;"><strong>Group:</strong> ${groupName}</p>
               </div>
               

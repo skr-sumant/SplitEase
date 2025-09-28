@@ -7,6 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Plus, Users, Receipt, IndianRupee } from 'lucide-react';
 import { GroupDialog } from '@/components/GroupDialog';
 import { GroupCard } from '@/components/GroupCard';
+import { useNavigate } from 'react-router-dom';
 
 interface Group {
   id: string;
@@ -19,6 +20,7 @@ interface Group {
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   const [groups, setGroups] = useState<Group[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
@@ -66,6 +68,11 @@ const Dashboard = () => {
 
   const handleSignOut = async () => {
     await signOut();
+    navigate('/');
+    toast({
+      title: "Success",
+      description: "Signed out successfully!",
+    });
   };
 
   if (loading) {
@@ -83,7 +90,7 @@ const Dashboard = () => {
           <h1 className="text-2xl font-bold">SplitEase</h1>
           <div className="flex items-center gap-4">
             <span className="text-sm text-muted-foreground">
-              Welcome, {user?.email}
+             Welcome , {user?.user_metadata.full_name || user?.email}
             </span>
             <Button variant="outline" onClick={handleSignOut}>
               Sign Out

@@ -7,7 +7,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff ,House} from 'lucide-react';
 
 const Auth = () => {
   const [email, setEmail] = useState('');
@@ -95,6 +95,12 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <a href='/' className='absolute top-4 left-4'>
+        <Button variant="ghost" className='gap-2'>
+          <House className='h-4 w-4' />
+          Home
+        </Button>
+      </a>
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">SplitEase</CardTitle>

@@ -283,8 +283,8 @@ export const PaymentTracker: React.FC<PaymentTrackerProps> = ({
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="cash">Cash</SelectItem>
+                      <SelectItem value="UPI">UPI</SelectItem>
                       <SelectItem value="card">Card</SelectItem>
-                      <SelectItem value="bank_transfer">Bank Transfer</SelectItem>
                       <SelectItem value="digital_wallet">Digital Wallet</SelectItem>
                       <SelectItem value="other">Other</SelectItem>
                     </SelectContent>
