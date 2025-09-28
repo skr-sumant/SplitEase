@@ -7,7 +7,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Plus, Users, Receipt, Trash2, UserPlus } from 'lucide-react';
-import { ExpenseDialog } from '@/components/ExpenseDialog';
+import { ExpenseDialogWithPayments } from '@/components/ExpenseDialogWithPayments';
 import { ExpenseCard } from '@/components/ExpenseCard';
 import { MemberCard } from '@/components/MemberCard';
 import { AddMemberDialog } from '@/components/AddMemberDialog';
@@ -268,7 +268,7 @@ const GroupDetail = () => {
                   <Receipt className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">${totalExpenses.toFixed(2)}</p>
+                  <p className="text-2xl font-bold">₹{totalExpenses.toFixed(2)}</p>
                   <p className="text-muted-foreground">Total Spent</p>
                 </div>
               </div>
@@ -313,6 +313,7 @@ const GroupDetail = () => {
                     onUpdate={fetchGroupData}
                     currentUserId={user?.id}
                     groupName={group.name}
+                    members={members}
                   />
                 ))}
               </div>
@@ -343,7 +344,7 @@ const GroupDetail = () => {
         </Tabs>
       </main>
 
-      <ExpenseDialog
+      <ExpenseDialogWithPayments
         open={showAddExpense}
         onOpenChange={setShowAddExpense}
         groupId={groupId!}

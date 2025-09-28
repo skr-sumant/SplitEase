@@ -4,13 +4,14 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Calendar, DollarSign, Check, Clock, Mail, MessageCircle, MoreVertical } from 'lucide-react';
+import { Calendar, IndianRupee, Check, Clock, Mail, MessageCircle, MoreVertical, TrendingUp } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { PaymentTracker } from './PaymentTracker';
 
 interface ExpenseSplit {
   id: string;
@@ -30,18 +31,26 @@ interface Expense {
   splits: ExpenseSplit[];
 }
 
+interface Member {
+  id: string;
+  name: string;
+  email?: string;
+}
+
 interface ExpenseCardProps {
   expense: Expense;
   onUpdate: () => void;
   currentUserId?: string;
   groupName?: string;
+  members?: Member[];
 }
 
 export const ExpenseCard: React.FC<ExpenseCardProps> = ({ 
   expense, 
   onUpdate, 
   currentUserId,
-  groupName = "Your Group"
+  groupName = "Your Group",
+  members = []
 }) => {
   const { toast } = useToast();
   const [isReminderSending, setIsReminderSending] = useState<string | null>(null);
@@ -86,6 +95,9 @@ export const ExpenseCard: React.FC<ExpenseCardProps> = ({
     setIsReminderSending(split.id);
 
     try {
+      // Generate payment link - for now using the app URL, in future could integrate with payment providers
+      const paymentLink = `${window.location.origin}/expense/${expense.id}/pay?split=${split.id}`;
+      
       const { error } = await supabase.functions.invoke('send-payment-reminder', {
         body: {
           expenseId: expense.id,
@@ -94,7 +106,8 @@ export const ExpenseCard: React.FC<ExpenseCardProps> = ({
           expenseTitle: expense.title,
           amount: split.amount,
           groupName: groupName,
-          reminderType: reminderType
+          reminderType: reminderType,
+          paymentLink: paymentLink
         }
       });
 
@@ -142,8 +155,8 @@ export const ExpenseCard: React.FC<ExpenseCardProps> = ({
       <CardContent className="space-y-4">
         <div className="flex items-center gap-4 text-sm">
           <div className="flex items-center gap-1">
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-            <span className="font-medium">${expense.amount.toFixed(2)}</span>
+            <IndianRupee className="h-4 w-4 text-muted-foreground" />
+            <span className="font-medium">₹{expense.amount.toFixed(2)}</span>
           </div>
           
           <div className="flex items-center gap-1">
@@ -172,7 +185,7 @@ export const ExpenseCard: React.FC<ExpenseCardProps> = ({
                 </div>
                 
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium">${split.amount.toFixed(2)}</span>
+                  <span className="text-sm font-medium">₹{split.amount.toFixed(2)}</span>
                   {!split.paid && (
                     <div className="flex items-center gap-2">
                       <Button
@@ -220,6 +233,13 @@ export const ExpenseCard: React.FC<ExpenseCardProps> = ({
             ))}
           </div>
         </div>
+
+        <PaymentTracker 
+          expenseId={expense.id}
+          totalAmount={expense.amount}
+          members={members}
+          onPaymentAdded={onUpdate}
+        />
       </CardContent>
     </Card>
   );

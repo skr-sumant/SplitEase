@@ -1,14 +1,13 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Users, Bell, Smartphone, IndianRupee } from 'lucide-react';
+import { Users, IndianRupee, Bell, Smartphone } from 'lucide-react';
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b bg-card">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          
           <h1 className="text-2xl font-bold">SplitEase</h1>
           <Link to="/auth">
             <Button>Get Started</Button>
@@ -92,9 +91,9 @@ const Index = () => {
       </main>
 
       <footer className="border-t bg-muted/30 py-8">
-        <div className="container mx-auto px-4 text-center text-muted-foreground" >
+        <div className="container mx-auto px-4 text-center text-muted-foreground">
           <p>&copy; 2025 SplitEase. Making bill splitting simple.</p>
-          <p style={{ color:"#7746f2"}}>Made by @Sumant, @Shivani, @Saumya with &hearts; in India</p>
+          <p> <strong>Made with ❤️ by the SplitEase Team.</strong> </p>
         </div>
       </footer>
     </div>

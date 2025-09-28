@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Users, DollarSign, Calendar } from 'lucide-react';
+import { Users, IndianRupee, Calendar } from 'lucide-react';
 
 interface Group {
   id: string;
@@ -45,8 +45,8 @@ export const GroupCard: React.FC<GroupCardProps> = ({ group }) => {
           </div>
           
           <div className="flex items-center gap-2 text-sm">
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-            <span>${group.total_expenses.toFixed(2)} total</span>
+            <IndianRupee className="h-4 w-4 text-muted-foreground" />
+            <span>₹{group.total_expenses.toFixed(2)} total</span>
           </div>
           
           <div className="flex items-center gap-2 text-sm">

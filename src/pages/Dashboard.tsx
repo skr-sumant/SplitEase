@@ -4,10 +4,9 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Plus, Users, Receipt,IndianRupee, User } from 'lucide-react';
+import { Plus, Users, Receipt, IndianRupee } from 'lucide-react';
 import { GroupDialog } from '@/components/GroupDialog';
 import { GroupCard } from '@/components/GroupCard';
-import { useNavigate } from 'react-router-dom';
 
 interface Group {
   id: string;
@@ -20,7 +19,6 @@ interface Group {
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
-  const navigate = useNavigate();
   const [groups, setGroups] = useState<Group[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
@@ -68,11 +66,6 @@ const Dashboard = () => {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate('/');
-    toast({
-      title: "Success",
-      description: "Signed out successfully!",
-    });
   };
 
   if (loading) {
@@ -89,10 +82,8 @@ const Dashboard = () => {
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold">SplitEase</h1>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-muted-foreground" >
-              
-              Welcome,{user?.user_metadata.full_name || user?.email}
-              
+            <span className="text-sm text-muted-foreground">
+              Welcome, {user?.email}
             </span>
             <Button variant="outline" onClick={handleSignOut}>
               Sign Out
@@ -136,7 +127,7 @@ const Dashboard = () => {
                 </div>
                 <div>
                   <p className="text-2xl font-bold">
-                    ₹ {groups.reduce((sum, g) => sum + g.total_expenses, 0).toFixed(2)}
+                    ₹{groups.reduce((sum, g) => sum + g.total_expenses, 0).toFixed(2)}
                   </p>
                   <p className="text-muted-foreground">Total Expenses</p>
                 </div>

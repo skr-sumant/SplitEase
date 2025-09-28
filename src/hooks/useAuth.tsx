@@ -9,7 +9,10 @@ interface AuthContextType {
   signUp: (email: string, password: string, fullName: string) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
+  sendOTPForPasswordReset: (email: string) => Promise<{ error: any }>;
+  verifyOTPAndResetPassword: (email: string, otp: string, newPassword: string) => Promise<{ error: any }>;
   resetPassword: (email: string) => Promise<{ error: any }>;
+  updatePassword: (newPassword: string) => Promise<{ error: any }>;
 }
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
@@ -77,18 +80,68 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await supabase.auth.signOut();
   };
 
+  const sendOTPForPasswordReset = async (email: string) => {
+    try {
+      // Generate OTP and send email
+      const { data: otpData, error: otpError } = await supabase.rpc('create_password_reset_otp', {
+        user_email: email
+      });
+
+      if (otpError) {
+        return { error: otpError };
+      }
+
+      // Send OTP email using edge function
+      const { error: emailError } = await supabase.functions.invoke('send-otp-email', {
+        body: { email, otp: otpData }
+      });
+
+      return { error: emailError };
+    } catch (error) {
+      return { error };
+    }
+  };
+
+  const verifyOTPAndResetPassword = async (email: string, otp: string, newPassword: string) => {
+    try {
+      // Use edge function to verify OTP and reset password
+      const { error } = await supabase.functions.invoke('reset-password-with-otp', {
+        body: { email, otp, newPassword }
+      });
+
+      return { error };
+    } catch (error) {
+      return { error };
+    }
+  };
+
   const resetPassword = async (email: string) => {
-    const redirectUrl = `${window.location.origin}/`;
-    
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: redirectUrl,
+      redirectTo: `${window.location.origin}/reset-password`,
     });
-    
+    return { error };
+  };
+
+  const updatePassword = async (newPassword: string) => {
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword
+    });
     return { error };
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, signUp, signIn, signOut, resetPassword }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      session, 
+      loading, 
+      signUp, 
+      signIn, 
+      signOut, 
+      sendOTPForPasswordReset,
+      verifyOTPAndResetPassword,
+      resetPassword, 
+      updatePassword 
+    }}>
       {children}
     </AuthContext.Provider>
   );

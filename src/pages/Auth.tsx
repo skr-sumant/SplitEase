@@ -7,7 +7,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Eye, EyeOff,House } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 
 const Auth = () => {
   const [email, setEmail] = useState('');
@@ -17,7 +17,7 @@ const Auth = () => {
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [showSignInPassword, setShowSignInPassword] = useState(false);
   const [showSignUpPassword, setShowSignUpPassword] = useState(false);
-  const { signUp, signIn, resetPassword } = useAuth();
+  const { signUp, signIn, sendOTPForPasswordReset } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -74,32 +74,27 @@ const Auth = () => {
     }
 
     setLoading(true);
-    const { error } = await resetPassword(email);
+    const { error } = await sendOTPForPasswordReset(email);
     
     if (error) {
       toast({
-        title: "Reset password failed",
+        title: "Failed to send OTP",
         description: error.message,
         variant: "destructive",
       });
     } else {
       toast({
-        title: "Reset email sent!",
-        description: "Check your email for password reset instructions.",
+        title: "OTP sent!",
+        description: "Check your email for the OTP code.",
       });
-      setShowForgotPassword(false);
+      // Navigate to OTP verification page
+      navigate(`/otp-verification?email=${encodeURIComponent(email)}`);
     }
     setLoading(false);
   };
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <a href='/' className='absolute top-4 left-4'>
-        <Button variant="ghost" className='gap-2'>
-          <House className='h-4 w-4' />
-          Home
-        </Button>
-      </a>
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">SplitEase</CardTitle>
@@ -126,7 +121,7 @@ const Auth = () => {
                   />
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? 'Sending...' : 'Send Reset Email'}
+                  {loading ? 'Sending OTP...' : 'Send OTP'}
                 </Button>
                 <Button 
                   type="button" 

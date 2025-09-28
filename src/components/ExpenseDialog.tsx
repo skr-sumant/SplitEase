@@ -266,8 +266,8 @@ export const ExpenseDialog: React.FC<ExpenseDialogProps> = ({
             </div>
 
             <div className="text-sm text-muted-foreground">
-              Total: ${splitMembers.filter(m => m.selected).reduce((sum, m) => sum + m.amount, 0).toFixed(2)} 
-              / ${amount || '0.00'}
+              Total: ₹{splitMembers.filter(m => m.selected).reduce((sum, m) => sum + m.amount, 0).toFixed(2)} 
+              / ₹{amount || '0.00'}
             </div>
           </div>
 

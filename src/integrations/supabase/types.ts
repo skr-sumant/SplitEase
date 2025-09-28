@@ -14,6 +14,53 @@ export type Database = {
   }
   public: {
     Tables: {
+      expense_payments: {
+        Row: {
+          amount: number
+          created_at: string
+          expense_id: string
+          id: string
+          notes: string | null
+          paid_by_email: string | null
+          paid_by_name: string
+          paid_by_user_id: string | null
+          payment_date: string
+          payment_method: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          expense_id: string
+          id?: string
+          notes?: string | null
+          paid_by_email?: string | null
+          paid_by_name: string
+          paid_by_user_id?: string | null
+          payment_date?: string
+          payment_method?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          expense_id?: string
+          id?: string
+          notes?: string | null
+          paid_by_email?: string | null
+          paid_by_name?: string
+          paid_by_user_id?: string | null
+          payment_date?: string
+          payment_method?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expense_payments_expense_id_fkey"
+            columns: ["expense_id"]
+            isOneToOne: false
+            referencedRelation: "expenses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       expense_splits: {
         Row: {
           amount: number
@@ -23,6 +70,8 @@ export type Database = {
           member_name: string
           paid: boolean
           paid_at: string | null
+          payment_method: string | null
+          payment_reference: string | null
           user_id: string | null
         }
         Insert: {
@@ -33,6 +82,8 @@ export type Database = {
           member_name: string
           paid?: boolean
           paid_at?: string | null
+          payment_method?: string | null
+          payment_reference?: string | null
           user_id?: string | null
         }
         Update: {
@@ -43,6 +94,8 @@ export type Database = {
           member_name?: string
           paid?: boolean
           paid_at?: string | null
+          payment_method?: string | null
+          payment_reference?: string | null
           user_id?: string | null
         }
         Relationships: [
@@ -158,6 +211,33 @@ export type Database = {
         }
         Relationships: []
       }
+      password_reset_otps: {
+        Row: {
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          otp: string
+          used: boolean
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          expires_at: string
+          id?: string
+          otp: string
+          used?: boolean
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          otp?: string
+          used?: boolean
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -193,6 +273,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_password_reset_otp: {
+        Args: { user_email: string }
+        Returns: string
+      }
+      generate_otp: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       is_group_owner: {
         Args: { group_id_param: string; user_id_param: string }
         Returns: boolean
@@ -203,6 +291,10 @@ export type Database = {
       }
       is_user_group_member: {
         Args: { group_id_param: string; user_id_param: string }
+        Returns: boolean
+      }
+      verify_password_reset_otp: {
+        Args: { otp_code: string; user_email: string }
         Returns: boolean
       }
     }
