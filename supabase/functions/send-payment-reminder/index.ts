@@ -62,62 +62,68 @@ const handler = async (req: Request): Promise<Response> => {
           },
         });
 
+        const rawHtml = `
+<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+  <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 32px 24px; border-radius: 12px 12px 0 0; text-align: center;">
+    <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 600;">🔔 Payment Reminder</h1>
+    <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0 0; font-size: 16px;">SplitEase - Keep your expenses organized</p>
+  </div>
+  <div style="padding: 32px 24px;">
+    <p style="font-size: 18px; color: #333; margin: 0 0 16px 0;">Hello <strong>${memberName}</strong> 👋</p>
+    <p style="color: #666; font-size: 16px; line-height: 1.6; margin-bottom: 24px;">This is a friendly reminder that you have an outstanding payment for the expense <strong>"${expenseTitle}"</strong> in the group <strong>${groupName}</strong>.</p>
+    <div style="background-color: #f8f9fa; padding: 24px; margin: 24px 0; border-radius: 12px; border-left: 4px solid #007bff;">
+      <h3 style="margin: 0 0 16px 0; color: #1a1a1a; font-size: 18px;">💰 Payment Details</h3>
+      <div style="background: white; padding: 16px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <p style="margin: 8px 0; color: #333; font-size: 14px;"><strong>📋 Expense:</strong> ${expenseTitle}</p>
+        <p style="margin: 8px 0; color: #d73027; font-size: 16px; font-weight: bold;"><strong>💸 Amount Due:</strong> ₹${amount.toFixed(2)}</p>
+        <p style="margin: 8px 0; color: #333; font-size: 14px;"><strong>👥 Group:</strong> ${groupName}</p>
+      </div>
+    </div>
+    ${paymentLink ? `
+      <div style="text-align: center; margin: 32px 0;">
+        <a href="${paymentLink}" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 16px 32px; text-decoration: none; border-radius: 30px; font-weight: 600; font-size: 16px; display: inline-block; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);">
+          💳 Pay Now - ₹${amount.toFixed(2)}
+        </a>
+      </div>
+      <p style="text-align: center; font-size: 12px; color: #999; margin-top: 16px;">Or copy this link: <a href="${paymentLink}" style="color: #007bff;">${paymentLink}</a></p>
+    ` : ''}
+    <div style="margin: 32px 0; padding: 20px; background: #e8f5e8; border-radius: 8px; border-left: 4px solid #28a745;">
+      <p style="margin: 0; color: #155724; font-size: 14px;">💡 <strong>Next Step:</strong> Please mark your payment as completed in the app once you've settled this expense.</p>
+    </div>
+    <div style="text-align: center; margin-top: 40px; padding-top: 24px; border-top: 1px solid #eee;">
+      <p style="color: #666; font-size: 16px; margin: 0;">Thank you for using SplitEase! 🙏</p>
+      <p style="color: #999; font-size: 14px; margin: 8px 0 0 0;"><em>The SplitEase Team</em></p>
+    </div>
+  </div>
+</div>`;
+
+        // Minify to avoid quoted-printable artifacts like "=20"
+        const htmlMin = rawHtml
+          .replace(/\r?\n/g, '') // remove newlines
+          .replace(/\s+>/g, '>') // trim spaces before closing angle
+          .replace(/>\s+/g, '>') // trim spaces after closing angle
+          .replace(/\s{2,}/g, ' '); // collapse multiple spaces
+
         await client.send({
           from: Deno.env.get("SMTP_EMAIL") || "support@cantan.in",
           to: memberEmail,
           subject: `Payment Reminder: ${expenseTitle}`,
-          html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-              <h2 style="color: #333;">💰 Payment Reminder</h2>
-              <p>Hi ${memberName},</p>
-              
-              <p>This is a friendly reminder that you have an outstanding payment for the expense <strong>"${expenseTitle}"</strong> in the group <strong>${groupName}</strong>.</p>
-              
-              <div style="background-color: #f5f5f5; padding: 20px; margin: 20px 0; border-radius: 8px;">
-                <h3 style="margin: 0 0 10px 0; color: #333;">Payment Details:</h3>
-                <p style="margin: 5px 0;"><strong>Expense:</strong> ${expenseTitle}</p>
-                <p style="margin: 5px 0;"><strong>Amount Due:</strong> ₹${amount.toFixed(2)}</p>
-                <p style="margin: 5px 0;"><strong>Group:</strong> ${groupName}</p>
-              </div>
-              
-              ${paymentLink ? `
-                <div style="text-align: center; margin: 30px 0;">
-                  <a href="${paymentLink}" style="
-                    background-color: #007bff;
-                    color: white;
-                    padding: 12px 24px;
-                    text-decoration: none;
-                    border-radius: 6px;
-                    font-weight: bold;
-                    display: inline-block;
-                  ">💳 Pay Now</a>
-                </div>
-                <p style="text-align: center; font-size: 12px; color: #666;">
-                  Or copy this link: <a href="${paymentLink}">${paymentLink}</a>
-                </p>
-              ` : ''}
-              
-              <p>Please mark your payment as completed once you've settled this expense.</p>
-              
-              <p>Thank you!</p>
-              <p><em>The SplitEase Team</em></p>
-            </div>
-          `,
+          html: htmlMin,
         });
 
         await client.close();
         responses.email = { success: true };
         console.log("Email sent successfully via SMTP");
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error sending email:", error);
-        responses.emailError = error.message;
+        responses.emailError = error?.message || 'Unknown error occurred';
       }
     }
 
     // Send WhatsApp reminder (using a simple webhook approach)
     if ((reminderType === 'whatsapp' || reminderType === 'both') && whatsappNumber) {
       try {
-        const whatsappMessage = `🔔 *Payment Reminder*\n\nHi ${memberName},\n\nYou have an outstanding payment:\n\n💰 *Amount:* $${amount.toFixed(2)}\n📋 *Expense:* ${expenseTitle}\n👥 *Group:* ${groupName}\n\nPlease mark your payment as completed once settled.\n\nThank you! 🙏`;
+        const whatsappMessage = `🔔 *Payment Reminder*\n\nHi ${memberName},\n\nYou have an outstanding payment:\n\n💰 *Amount:* ₹${amount.toFixed(2)}\n📋 *Expense:* ${expenseTitle}\n👥 *Group:* ${groupName}\n\nPlease mark your payment as completed once settled.\n\nThank you! 🙏`;
         
         // This is a placeholder for WhatsApp integration
         // You would need to integrate with WhatsApp Business API or a service like Twilio
@@ -129,9 +135,9 @@ const handler = async (req: Request): Promise<Response> => {
         };
         
         console.log("WhatsApp reminder prepared for:", whatsappNumber);
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error preparing WhatsApp reminder:", error);
-        responses.whatsappError = error.message;
+        responses.whatsappError = error?.message || 'Unknown error occurred';
       }
     }
 

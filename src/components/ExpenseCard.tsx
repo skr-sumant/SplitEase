@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Calendar, IndianRupee, Check, Clock, Mail, MessageCircle, MoreVertical, TrendingUp } from 'lucide-react';
+import { Calendar, Check, Clock, Mail, MessageCircle, MoreVertical, TrendingUp, IndianRupee } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -236,6 +236,8 @@ export const ExpenseCard: React.FC<ExpenseCardProps> = ({
 
         <PaymentTracker 
           expenseId={expense.id}
+          expenseTitle={expense.title}
+          groupName={groupName}
           totalAmount={expense.amount}
           members={members}
           onPaymentAdded={onUpdate}

@@ -41,6 +41,8 @@ interface Member {
 
 interface PaymentTrackerProps {
   expenseId: string;
+  expenseTitle: string;
+  groupName: string;
   totalAmount: number;
   members: Member[];
   onPaymentAdded: () => void;
@@ -48,6 +50,8 @@ interface PaymentTrackerProps {
 
 export const PaymentTracker: React.FC<PaymentTrackerProps> = ({
   expenseId,
+  expenseTitle,
+  groupName,
   totalAmount,
   members,
   onPaymentAdded
@@ -174,10 +178,12 @@ export const PaymentTracker: React.FC<PaymentTrackerProps> = ({
         
         const { error } = await supabase.functions.invoke('send-payment-reminder', {
           body: {
+            expenseId,
             memberName: result.member,
             memberEmail: member.email,
+            expenseTitle,
             amount: result.pending,
-            reminderMessage: reminderMessage,
+            groupName,
             reminderType: 'email'
           }
         });
@@ -283,8 +289,8 @@ export const PaymentTracker: React.FC<PaymentTrackerProps> = ({
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="cash">Cash</SelectItem>
-                      <SelectItem value="UPI">UPI</SelectItem>
                       <SelectItem value="card">Card</SelectItem>
+                      <SelectItem value="bank_transfer">Bank Transfer</SelectItem>
                       <SelectItem value="digital_wallet">Digital Wallet</SelectItem>
                       <SelectItem value="other">Other</SelectItem>
                     </SelectContent>
